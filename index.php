@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION["funcionario_id"])) {
+    header("Location: /pages/login/login.html");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Inicial - Bodyfit</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
 <body>
@@ -17,10 +26,10 @@
 
     <div class="topo-direita">
       <p class="funcionario">
-        Funcionário logado
+        <?php echo $_SESSION["funcionario_nome"]; ?>
       </p>
 
-      <a href="logout.php" class="sair">
+      <a href="/pages/login/logout.php" class="sair">
         Sair
       </a>
     </div>
@@ -30,8 +39,11 @@
 
     <section class="titulo">
       <h1>Painel Administrativo</h1>
+
       <p>
-        Gerencie alunos, planos e controle de acesso da academia.
+        Bem-vindo,
+        <strong><?php echo $_SESSION["funcionario_nome"]; ?></strong>
+        (<?php echo $_SESSION["funcionario_cargo"]; ?>)
       </p>
     </section>
 
@@ -50,22 +62,33 @@
       <a href="/pages/usuarios/gerenciamento_usuarios.php" class="card">
         <div class="icone">📋</div>
 
-        <h2>Listar Alunos</h2>
+        <h2>Gerenciar Alunos</h2>
 
         <p>
-          Visualize e gerencie os alunos cadastrados.
+          Visualize, edite e exclua alunos cadastrados.
         </p>
       </a>
 
       <a href="/pages/planos/controle_planos.php" class="card">
         <div class="icone">💳</div>
 
-        <h2>Gerenciar Planos</h2>
+        <h2>Controle de Planos</h2>
 
         <p>
           Cadastre e altere planos da academia.
         </p>
       </a>
+
+      <a href="/pages/bloqueios/controle_bloqueios.php" class="card">
+        <div class="icone">🚫</div>
+
+        <h2>Controle de Bloqueios</h2>
+
+        <p>
+          Gerencie alunos bloqueados.
+        </p>
+      </a>
+
     </section>
 
   </main>

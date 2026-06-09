@@ -23,7 +23,8 @@ $resultado = $conexao->query($sql);
                 <th>CPF</th>
                 <th>E-mail</th>
                 <th>Telefone</th>
-                <th>Endereço</th>
+                <th>CEP</th>
+                <th>Número</th>
                 <th>Plano</th>
                 <th>Ações</th>
             </tr>
@@ -37,14 +38,15 @@ $resultado = $conexao->query($sql);
                 <td><?php echo $usuario["cpf"]; ?></td>
                 <td><?php echo $usuario["email"]; ?></td>
                 <td><?php echo $usuario["telefone"]; ?></td>
-                <td><?php echo $usuario["endereco"]; ?></td>
+                <td><?php echo $usuario["cep"]; ?></td>
+                <td><?php echo $usuario["numero"]; ?></td>
                 <td><?php echo $usuario["plano_id"]; ?></td>
                 <td>
                     <a href="editar_usuario.php?id=<?php echo $usuario['id'];?>">
                 Editar
                     </a>
                     <td>
-                    <a href="editar_usuario.php?id=<?php echo $usuario['id'];?>">
+                    <a href="excluir_usuario.php?id=<?php echo $usuario['id'];?>">
                 Excluir
                     </a>
                 </td>
