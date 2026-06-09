@@ -22,6 +22,7 @@ if ($funcionario) {
     header("Location: ../dashboard/dashboard.php");
     exit;
 } else {
-    echo "CPF ou senha incorretos.";
+    header("Location: login.php?erro=1");
+    exit;
 }
 ?>

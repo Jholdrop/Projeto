@@ -16,7 +16,7 @@ $sql = "UPDATE usuarios SET
     email = '$email',
     telefone = '$telefone',
     cep = '$cep',
-    numero = '$numero'
+    numero = '$numero',
     plano_id = $plano_id
 WHERE id = $id";
 
