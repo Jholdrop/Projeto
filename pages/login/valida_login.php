@@ -3,14 +3,18 @@ session_start();
 
 require_once "../../config/conexao.php";
 
-$cpf = $_POST["cpf"];
-$senha = $_POST["senha"];
+$cpf = $_POST["cpf"] ?? "";
+$senha = $_POST["senha"] ?? "";
 
 $sql = "SELECT * FROM funcionarios 
-        WHERE cpf = '$cpf' 
-        AND senha = '$senha'";
+        WHERE cpf = :cpf 
+        AND senha = :senha";
 
-$resultado = $conexao->query($sql);
+$resultado = $conexao->prepare($sql);
+$resultado->execute([
+    ":cpf" => $cpf,
+    ":senha" => $senha
+]);
 
 $funcionario = $resultado->fetch(PDO::FETCH_ASSOC);
 

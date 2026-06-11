@@ -7,23 +7,49 @@ if (!isset($_SESSION["funcionario_id"])) {
     exit;
 }
 
-// Contagens dinâmicas
+// Contagens reais do banco
 try {
-    $db_total_usuarios = $conexao->query("SELECT COUNT(*) FROM usuarios WHERE status = 'ativo'")->fetchColumn();
+    $db_total_usuarios = $conexao->query("SELECT COUNT(*) FROM usuarios WHERE LOWER(status) = 'ativo'")->fetchColumn();
     $db_novos_usuarios = $conexao->query("SELECT COUNT(*) FROM usuarios WHERE criado_em >= date_trunc('month', CURRENT_DATE)")->fetchColumn();
     $db_total_planos = $conexao->query("SELECT COUNT(*) FROM planos")->fetchColumn();
-    $db_total_bloqueados = $conexao->query("SELECT COUNT(*) FROM bloqueados WHERE status = 'ativo'")->fetchColumn();
+    $db_total_bloqueados = $conexao->query("SELECT COUNT(*) FROM bloqueados WHERE LOWER(status) = 'ativo'")->fetchColumn();
+    $atividades_recentes = $conexao->query("
+        SELECT 'Novo usuario cadastrado' AS acao, nome AS usuario, email AS detalhes, criado_em AS data_hora
+        FROM usuarios
+        WHERE criado_em IS NOT NULL
+        UNION ALL
+        SELECT 'Usuario bloqueado' AS acao, u.nome AS usuario, b.motivo AS detalhes, b.data_bloqueio AS data_hora
+        FROM bloqueados b
+        INNER JOIN usuarios u ON b.usuario_id = u.id
+        ORDER BY data_hora DESC
+        LIMIT 5
+    ")->fetchAll(PDO::FETCH_ASSOC);
+    $usuarios_por_mes = $conexao->query("
+        SELECT to_char(m.mes, 'Mon') AS mes, COUNT(u.id) AS total
+        FROM generate_series(date_trunc('month', CURRENT_DATE) - interval '6 months', date_trunc('month', CURRENT_DATE), interval '1 month') AS m(mes)
+        LEFT JOIN usuarios u ON date_trunc('month', u.criado_em) = m.mes
+        GROUP BY m.mes
+        ORDER BY m.mes
+    ")->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     $db_total_usuarios = 0;
     $db_novos_usuarios = 0;
     $db_total_planos = 0;
     $db_total_bloqueados = 0;
+    $atividades_recentes = [];
+    $usuarios_por_mes = [];
 }
 
-$total_usuarios = $db_total_usuarios > 0 ? $db_total_usuarios : 248;
-$novos_usuarios = $db_novos_usuarios > 0 ? $db_novos_usuarios : 35;
-$total_planos = $db_total_planos > 0 ? $db_total_planos : 198;
-$total_bloqueados = $db_total_bloqueados > 0 ? $db_total_bloqueados : 12;
+$total_usuarios = (int) $db_total_usuarios;
+$novos_usuarios = (int) $db_novos_usuarios;
+$total_planos = (int) $db_total_planos;
+$total_bloqueados = (int) $db_total_bloqueados;
+$chart_labels = array_map(function ($item) {
+    return $item["mes"];
+}, $usuarios_por_mes);
+$chart_data = array_map(function ($item) {
+    return (int) $item["total"];
+}, $usuarios_por_mes);
 
 $page_active = 'dashboard';
 $header_title = "Olá, " . ($_SESSION["funcionario_nome"] ?? "Administrador") . "! 👋";
@@ -65,7 +91,7 @@ $header_subtitle = "Bem-vindo ao sistema administrativo da Bodyfit.";
                         <div class="stat-info">
                             <span class="stat-label">Usuários ativos</span>
                             <span class="stat-value"><?php echo $total_usuarios; ?></span>
-                            <span class="stat-trend trend-up">+12% <span class="trend-text">em relação ao mês anterior</span></span>
+                            <span class="stat-trend"><span class="trend-text">Total atual no banco</span></span>
                         </div>
                     </div>
 
@@ -78,7 +104,7 @@ $header_subtitle = "Bem-vindo ao sistema administrativo da Bodyfit.";
                         <div class="stat-info">
                             <span class="stat-label">Novos usuários (mês)</span>
                             <span class="stat-value"><?php echo $novos_usuarios; ?></span>
-                            <span class="stat-trend trend-up">+8% <span class="trend-text">em relação ao mês anterior</span></span>
+                            <span class="stat-trend"><span class="trend-text">Cadastros do mês atual</span></span>
                         </div>
                     </div>
 
@@ -92,7 +118,7 @@ $header_subtitle = "Bem-vindo ao sistema administrativo da Bodyfit.";
                         <div class="stat-info">
                             <span class="stat-label">Planos ativos</span>
                             <span class="stat-value"><?php echo $total_planos; ?></span>
-                            <span class="stat-trend trend-up">+6% <span class="trend-text">em relação ao mês anterior</span></span>
+                            <span class="stat-trend"><span class="trend-text">Planos cadastrados</span></span>
                         </div>
                     </div>
 
@@ -105,7 +131,7 @@ $header_subtitle = "Bem-vindo ao sistema administrativo da Bodyfit.";
                         <div class="stat-info">
                             <span class="stat-label">Bloqueios ativos</span>
                             <span class="stat-value"><?php echo $total_bloqueados; ?></span>
-                            <span class="stat-trend trend-down">-3% <span class="trend-text">em relação ao mês anterior</span></span>
+                            <span class="stat-trend"><span class="trend-text">Bloqueios ativos no banco</span></span>
                         </div>
                     </div>
                 </div>
@@ -246,81 +272,20 @@ $header_subtitle = "Bem-vindo ao sistema administrativo da Bodyfit.";
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="table-action-cell">
-                                                <span class="action-cell-icon icon-user-add">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
-                                                    </svg>
-                                                </span>
-                                                Novo usuário cadastrado
-                                            </div>
-                                        </td>
-                                        <td>Juliana Silva</td>
-                                        <td class="text-dim">Usuário juliana.silva@email.com cadastrado</td>
-                                        <td>20/05/2024 14:32</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="table-action-cell">
-                                                <span class="action-cell-icon icon-plan">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                                    </svg>
-                                                </span>
-                                                Plano criado
-                                            </div>
-                                        </td>
-                                        <td>Administrador</td>
-                                        <td class="text-dim">Plano "Plano Gold" criado</td>
-                                        <td>20/05/2024 11:15</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="table-action-cell">
-                                                <span class="action-cell-icon icon-lock">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                                    </svg>
-                                                </span>
-                                                Usuário bloqueado
-                                            </div>
-                                        </td>
-                                        <td>Carlos Pereira</td>
-                                        <td class="text-dim">Bloqueado por inadimplência</td>
-                                        <td>19/05/2024 16:45</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="table-action-cell">
-                                                <span class="action-cell-icon icon-plan">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                                    </svg>
-                                                </span>
-                                                Plano atualizado
-                                            </div>
-                                        </td>
-                                        <td>Administrador</td>
-                                        <td class="text-dim">Plano "Plano Silver" atualizado</td>
-                                        <td>19/05/2024 10:22</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="table-action-cell">
-                                                <span class="action-cell-icon icon-user-edit">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.83 20.013a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                                                    </svg>
-                                                </span>
-                                                Usuário editado
-                                            </div>
-                                        </td>
-                                        <td>Mariana Costa</td>
-                                        <td class="text-dim">Dados do usuário atualizados</td>
-                                        <td>18/05/2024 09:30</td>
-                                    </tr>
+                                    <?php if (empty($atividades_recentes)): ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center text-dim py-8">Nenhuma atividade registrada no banco.</td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <?php foreach ($atividades_recentes as $atividade): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($atividade["acao"]); ?></td>
+                                                <td><?php echo htmlspecialchars($atividade["usuario"]); ?></td>
+                                                <td class="text-dim"><?php echo htmlspecialchars($atividade["detalhes"]); ?></td>
+                                                <td><?php echo date('d/m/Y H:i', strtotime($atividade["data_hora"])); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -333,6 +298,12 @@ $header_subtitle = "Bem-vindo ao sistema administrativo da Bodyfit.";
         </div>
     </div>
 
+    <script>
+        window.dashboardChartData = {
+            labels: <?php echo json_encode($chart_labels); ?>,
+            data: <?php echo json_encode($chart_data); ?>
+        };
+    </script>
     <script src="/assets/js/main.js"></script>
 </body>
 </html>

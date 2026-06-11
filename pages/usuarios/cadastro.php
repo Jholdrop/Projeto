@@ -1,28 +1,45 @@
 <?php 
 require_once "../../config/conexao.php";
+require_once "foto_usuario_helper.php";
 session_start();
 
 if (!isset($_SESSION["funcionario_id"])) {
     header("Location: /pages/login/login.php");
     exit;
 }
-$email = $_POST["email"];
-$cpf = $_POST["cpf"];
-$telefone = $_POST["telefone"];
-$cep = $_POST["cep"];
-$numero = $_POST["numero"];
-$nome = $_POST["nome"];
-$plano_id = $_POST["plano_id"];
+$email = $_POST["email"] ?? "";
+$cpf = $_POST["cpf"] ?? "";
+$telefone = $_POST["telefone"] ?? "";
+$cep = $_POST["cep"] ?? "";
+$numero = $_POST["numero"] ?? "";
+$nome = $_POST["nome"] ?? "";
+$plano_id = $_POST["plano_id"] ?? null;
 $status = $_POST["status"] ?? "ativo";
-$cidade = $_POST["cidade"];
-$estado = $_POST["estado"];
+$cidade = $_POST["cidade"] ?? "";
+$estado = $_POST["estado"] ?? "";
 
 // Limpar caracteres não numéricos do CPF antes de salvar
 $cpf_limpo = preg_replace('/\D/', '', $cpf);
+$foto = salvar_foto_usuario($_FILES["foto_usuario"] ?? []);
 
-$sql = "INSERT INTO usuarios (email, cpf, telefone, cep, numero, nome, plano_id, cidade, status, estado) 
-        VALUES ('$email', '$cpf_limpo', '$telefone', '$cep', '$numero', '$nome', '$plano_id', '$cidade', '$status', '$estado')";
-$result = $conexao->query($sql);
+garantir_coluna_foto_usuario($conexao);
+
+$sql = "INSERT INTO usuarios (email, cpf, telefone, cep, numero, nome, plano_id, cidade, status, estado, foto) 
+        VALUES (:email, :cpf, :telefone, :cep, :numero, :nome, :plano_id, :cidade, :status, :estado, :foto)";
+$stmt = $conexao->prepare($sql);
+$result = $stmt->execute([
+    ":email" => $email,
+    ":cpf" => $cpf_limpo,
+    ":telefone" => $telefone,
+    ":cep" => $cep,
+    ":numero" => $numero,
+    ":nome" => $nome,
+    ":plano_id" => $plano_id,
+    ":cidade" => $cidade,
+    ":status" => $status,
+    ":estado" => $estado,
+    ":foto" => $foto
+]);
 
 if ($result) {
     header("Location: gerenciamento_usuarios.php");

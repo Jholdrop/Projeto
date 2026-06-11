@@ -9,9 +9,12 @@ if (!isset($_SESSION["funcionario_id"])) {
 require_once "../../config/conexao.php";
 
 try {
+    $usuarios_ativos = $conexao->query("SELECT id, nome FROM usuarios WHERE LOWER(status) = 'ativo' ORDER BY nome")->fetchAll(PDO::FETCH_ASSOC);
+
     $sql = "
     SELECT
         b.id,
+        b.usuario_id,
         u.nome,
         b.data_bloqueio,
         b.status,
@@ -24,6 +27,7 @@ try {
     $resultado = $conexao->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     $resultado = [];
+    $usuarios_ativos = [];
 }
 
 $page_active = 'bloqueios';
@@ -54,6 +58,30 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
             <?php include "../includes/header.php"; ?>
 
             <main class="app-main-content">
+                <div class="dashboard-panel full-width-panel">
+                    <div class="panel-header">
+                        <h2>Novo bloqueio</h2>
+                    </div>
+                    <div class="panel-content">
+                        <form action="bloqueios.php" method="POST" class="block-form">
+                            <input type="hidden" name="acao" value="bloquear">
+                            <div class="form-group">
+                                <label>Aluno</label>
+                                <select name="usuario_id" required>
+                                    <option value="">Selecione um aluno ativo</option>
+                                    <?php foreach ($usuarios_ativos as $usuario): ?>
+                                        <option value="<?php echo $usuario["id"]; ?>"><?php echo htmlspecialchars($usuario["nome"]); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Motivo</label>
+                                <input type="text" name="motivo" placeholder="Informe o motivo do bloqueio" required autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn-primary-action">Bloquear aluno</button>
+                        </form>
+                    </div>
+                </div>
                 
                 <div class="dashboard-panel full-width-panel">
                     <div class="panel-header">
@@ -70,12 +98,13 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
                                         <th>Data do Bloqueio</th>
                                         <th>Status do Bloqueio</th>
                                         <th>Motivo</th>
+                                        <th class="text-center">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (empty($resultado)): ?>
                                         <tr>
-                                            <td colspan="5" class="text-center text-dim py-8">Nenhum bloqueio registrado no banco.</td>
+                                            <td colspan="6" class="text-center text-dim py-8">Nenhum bloqueio registrado no banco.</td>
                                         </tr>
                                     <?php else: ?>
                                         <?php foreach ($resultado as $bloqueio) { 
@@ -92,6 +121,17 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
                                                     </span>
                                                 </td>
                                                 <td class="text-dim"><?php echo $bloqueio["motivo"]; ?></td>
+                                                <td>
+                                                    <?php if (strtolower($bloqueio["status"]) == 'ativo'): ?>
+                                                        <form action="bloqueios.php" method="POST" class="inline-action-form table-actions-group">
+                                                            <input type="hidden" name="usuario_id" value="<?php echo $bloqueio['usuario_id']; ?>">
+                                                            <input type="hidden" name="acao" value="desbloquear">
+                                                            <button type="submit" class="action-btn-edit" onclick="return confirm('Deseja revogar este bloqueio?');">Revogar</button>
+                                                        </form>
+                                                    <?php else: ?>
+                                                        <span class="text-dim">-</span>
+                                                    <?php endif; ?>
+                                                </td>
                                             </tr>
                                         <?php } ?>
                                     <?php endif; ?>

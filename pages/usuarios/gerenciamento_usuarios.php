@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../../config/conexao.php";
+require_once "foto_usuario_helper.php";
 
 if (!isset($_SESSION["funcionario_id"])) {
     header("Location: /pages/login/login.php");
@@ -8,6 +9,8 @@ if (!isset($_SESSION["funcionario_id"])) {
 }
 
 try {
+    garantir_coluna_foto_usuario($conexao);
+
     // Carregar todos os usuários do banco com seus respectivos planos (se houver relacionamento)
     $sql = "SELECT u.*, p.nome as plano_nome 
             FROM usuarios u 
@@ -74,6 +77,7 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Foto</th>
                                         <th>Nome</th>
                                         <th>CPF</th>
                                         <th>E-mail</th>
@@ -88,7 +92,7 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
                                 <tbody>
                                     <?php if (empty($resultado)): ?>
                                         <tr>
-                                            <td colspan="10" class="text-center text-dim py-8">Nenhum usuário cadastrado até o momento.</td>
+                                            <td colspan="11" class="text-center text-dim py-8">Nenhum usuário cadastrado até o momento.</td>
                                         </tr>
                                     <?php else: ?>
                                         <?php foreach ($resultado as $usuario) { 
@@ -104,6 +108,15 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
                                         ?>
                                             <tr>
                                                 <td>#<?php echo $usuario["id"]; ?></td>
+                                                <td>
+                                                    <?php if (!empty($usuario["foto"])): ?>
+                                                        <img src="<?php echo htmlspecialchars($usuario["foto"]); ?>" alt="Foto de <?php echo htmlspecialchars($usuario["nome"]); ?>" class="user-table-photo">
+                                                    <?php else: ?>
+                                                        <span class="user-table-photo user-table-photo-empty">
+                                                            <?php echo strtoupper(substr($usuario["nome"], 0, 1)); ?>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td class="font-weight-medium"><?php echo $usuario["nome"]; ?></td>
                                                 <td class="text-dim"><?php echo $cpf_formatado; ?></td>
                                                 <td><?php echo $usuario["email"]; ?></td>
@@ -134,6 +147,20 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
                                                             </svg>
                                                             Excluir
                                                         </a>
+                                                        <?php if (strtolower($usuario["status"]) == 'inativo'): ?>
+                                                            <form action="../bloqueios/bloqueios.php" method="POST" class="inline-action-form">
+                                                                <input type="hidden" name="usuario_id" value="<?php echo $usuario['id']; ?>">
+                                                                <input type="hidden" name="acao" value="desbloquear">
+                                                                <button type="submit" class="action-btn-edit" onclick="return confirm('Deseja desbloquear o aluno <?php echo addslashes($usuario['nome']); ?>?');">Desbloquear</button>
+                                                            </form>
+                                                        <?php else: ?>
+                                                            <form action="../bloqueios/bloqueios.php" method="POST" class="inline-action-form">
+                                                                <input type="hidden" name="usuario_id" value="<?php echo $usuario['id']; ?>">
+                                                                <input type="hidden" name="acao" value="bloquear">
+                                                                <input type="hidden" name="motivo" value="Bloqueio manual">
+                                                                <button type="submit" class="action-btn-delete" onclick="return confirm('Deseja bloquear o aluno <?php echo addslashes($usuario['nome']); ?>?');">Bloquear</button>
+                                                            </form>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </td>
                                             </tr>

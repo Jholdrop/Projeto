@@ -94,8 +94,9 @@ function drawDashboardChart(canvas) {
   canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
 
-  const labels = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul'];
-  const data   = [80, 110, 95, 155, 180, 215, 248];
+  const chartData = window.dashboardChartData || {};
+  const labels = chartData.labels && chartData.labels.length ? chartData.labels : ['Jan','Fev','Mar','Abr','Mai','Jun','Jul'];
+  const data   = chartData.data && chartData.data.length ? chartData.data : [0, 0, 0, 0, 0, 0, 0];
   const green  = '#a3f42c';
   const greenA = 'rgba(163,244,44,';
 
@@ -104,7 +105,8 @@ function drawDashboardChart(canvas) {
   const chartH = H - padT - padB;
 
   const minV = 0;
-  const maxV = 300;
+  const maxData = Math.max(...data, 0);
+  const maxV = Math.max(5, Math.ceil(maxData / 5) * 5);
 
   const xPos = i => padL + (i / (data.length - 1)) * chartW;
   const yPos = v => padT + (1 - (v - minV) / (maxV - minV)) * chartH;
@@ -112,7 +114,7 @@ function drawDashboardChart(canvas) {
   /* Grid lines */
   ctx.strokeStyle = 'rgba(255,255,255,0.06)';
   ctx.lineWidth = 1;
-  [0, 50, 100, 150, 200, 250, 300].forEach(v => {
+  Array.from({ length: 6 }, (_, i) => Math.round((maxV / 5) * i)).forEach(v => {
     const y = yPos(v);
     ctx.beginPath();
     ctx.moveTo(padL, y);

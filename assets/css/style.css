@@ -1304,6 +1304,7 @@ button, input, select, textarea {
     padding: 0 1.5rem;
     background-color: var(--primary);
     color: #000000;
+    border: none;
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 700;
@@ -1380,9 +1381,11 @@ button, input, select, textarea {
     font-weight: 700;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     transition: var(--transition-fast);
     white-space: nowrap;
+    cursor: pointer;
 }
 
 .btn-primary-action:hover {
@@ -1427,6 +1430,7 @@ button, input, select, textarea {
     align-items: center;
     justify-content: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .action-btn-edit, .action-btn-delete {
@@ -1438,6 +1442,8 @@ button, input, select, textarea {
     padding: 4px 8px;
     border-radius: 4px;
     transition: var(--transition-fast);
+    background: transparent;
+    cursor: pointer;
 }
 
 .action-btn-edit {
@@ -1460,6 +1466,32 @@ button, input, select, textarea {
     border-color: var(--danger);
 }
 
+.inline-action-form {
+    margin: 0;
+}
+
+.user-table-photo {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--panel-border);
+    background-color: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.block-form {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(220px, 2fr) auto;
+    align-items: end;
+    gap: 1rem;
+}
+
 /* ==========================================================================
    RESPONSIVIDADE E ADAPTAÇÕES VISUAIS
    ========================================================================== */
@@ -1474,6 +1506,10 @@ button, input, select, textarea {
     
     .dashboard-panel.full-width-panel {
         grid-column: span 1;
+    }
+
+    .block-form {
+        grid-template-columns: 1fr;
     }
     
     .form-main-columns {
