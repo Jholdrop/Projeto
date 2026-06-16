@@ -14,6 +14,7 @@
 | Versao | Data | Descricao | Autor |
 | --- | --- | --- | --- |
 | 1.0 | 2026-06-11 | Criacao da especificacao de requisitos no modelo ISO/IEC/IEEE 29148:2018. | Equipe do projeto |
+| 1.1 | 2026-06-16 | Inclusao do passo a passo de instalacao, conexao com banco e uso inicial do sistema. | Equipe do projeto |
 
 ---
 
@@ -353,19 +354,120 @@ $user = "postgres";
 $password = "postgres";
 ```
 
-### 11.2 Passos para Execucao
+### 11.2 Requisitos para Instalar
 
-1. Instalar um servidor local com suporte a PHP.
-2. Criar o banco de dados `academia_bd` no PostgreSQL.
-3. Importar os scripts SQL disponiveis em `backup.sql` e/ou `comandos.sql`.
-4. Conferir as credenciais em `config/conexao.php`.
-5. Acessar o projeto pelo navegador.
+Antes de executar o sistema, o usuario deve ter instalado:
 
-Exemplo:
+1. PHP com extensao PDO para PostgreSQL habilitada.
+2. PostgreSQL instalado e em execucao.
+3. Servidor local, como Apache, XAMPP, Laragon ou servidor embutido do PHP.
+4. Navegador web atualizado.
+
+### 11.3 Passo a Passo para Configurar o Banco
+
+1. Abrir o PostgreSQL pelo pgAdmin, terminal ou outra ferramenta de administracao.
+2. Criar um banco de dados vazio com o nome:
+
+```text
+academia_bd
+```
+
+3. Importar o arquivo `backup.sql` dentro do banco `academia_bd`.
+
+Exemplo pelo terminal:
+
+```bash
+psql -U postgres -d academia_bd -f backup.sql
+```
+
+4. Caso o banco ainda nao exista, ele pode ser criado pelo terminal com:
+
+```bash
+createdb -U postgres academia_bd
+```
+
+5. Conferir se as tabelas principais foram criadas:
+
+- `funcionarios`
+- `usuarios`
+- `planos`
+- `bloqueados`
+- `pagamentos`
+- `acessos`
+
+O arquivo `backup.sql` ja contem a estrutura inicial do banco e registros de exemplo, incluindo funcionario administrativo e planos.
+
+### 11.4 Passo a Passo para Conectar o Sistema ao Banco
+
+1. Abrir o arquivo:
+
+```text
+config/conexao.php
+```
+
+2. Conferir ou ajustar os dados de conexao conforme o PostgreSQL instalado na maquina:
+
+```php
+$host = "localhost";
+$dbaname = "academia_bd";
+$user = "postgres";
+$password = "postgres";
+```
+
+3. Se a senha do PostgreSQL da maquina for diferente, alterar apenas o valor de `$password`.
+4. Se o usuario do PostgreSQL for diferente de `postgres`, alterar o valor de `$user`.
+5. Salvar o arquivo antes de acessar o sistema.
+
+### 11.5 Passo a Passo para Executar o Projeto
+
+1. Colocar a pasta `Projeto` dentro da pasta publica do servidor local.
+
+Exemplos:
+
+- XAMPP: `htdocs/Projeto`
+- Laragon: `www/Projeto`
+
+2. Iniciar o Apache ou o servidor local escolhido.
+3. Garantir que o PostgreSQL esteja em execucao.
+4. Acessar o sistema pelo navegador:
 
 ```text
 http://localhost/Projeto/
 ```
+
+5. O sistema deve redirecionar para a tela de login.
+
+### 11.6 Acesso Inicial ao Sistema
+
+Quando o arquivo `backup.sql` for importado, o usuario pode acessar o sistema com o funcionario de exemplo:
+
+| Campo | Valor |
+| --- | --- |
+| CPF | `121.121.121-12` |
+| Senha | `instrutorfitgym` |
+
+Depois do login, o funcionario deve conseguir acessar o dashboard e navegar pelo menu lateral.
+
+### 11.7 Como Usar as Principais Funcionalidades
+
+1. Acessar o sistema pelo navegador e fazer login.
+2. Entrar no dashboard para visualizar os indicadores gerais.
+3. Acessar o menu de cadastro de usuarios para registrar novos alunos.
+4. Preencher os dados obrigatorios do aluno e, se desejar, enviar uma foto.
+5. Salvar o cadastro e conferir o aluno na tela de gerenciamento de usuarios.
+6. Usar a tela de gerenciamento para editar, excluir, bloquear ou desbloquear alunos.
+7. Acessar o controle de planos para visualizar os planos cadastrados.
+8. Acessar o controle de bloqueios para consultar registros de alunos bloqueados.
+
+### 11.8 Problemas Comuns
+
+| Problema | Possivel solucao |
+| --- | --- |
+| Erro de conexao com o banco | Verificar se o PostgreSQL esta aberto e se `config/conexao.php` possui usuario, senha e banco corretos. |
+| Banco nao encontrado | Criar o banco `academia_bd` antes de importar o `backup.sql`. |
+| Tabelas nao aparecem | Importar novamente o arquivo `backup.sql` no banco correto. |
+| Login nao funciona | Confirmar se o funcionario de exemplo foi importado na tabela `funcionarios`. |
+| Foto nao salva | Verificar permissao de escrita na pasta `assets/img/usuarios/`. |
 
 ---
 

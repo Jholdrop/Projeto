@@ -48,26 +48,26 @@ $header_subtitle = '<div class="breadcrumb"><a href="../dashboard/dashboard.php"
 </head>
 <body class="app-body">
 
-    <div class="app-layout">
+<div class="app-layout">
         <!-- Sidebar Include -->
-        <?php include "../includes/sidebar.php"; ?>
+    <?php include "../includes/sidebar.php"; ?>
 
         <!-- Área de Conteúdo -->
-        <div class="app-content-wrapper">
+    <div class="app-content-wrapper">
             <!-- Header Include -->
             <?php include "../includes/header.php"; ?>
 
-            <main class="app-main-content">
-                <div class="dashboard-panel full-width-panel">
-                    <div class="panel-header">
-                        <h2>Novo bloqueio</h2>
-                    </div>
-                    <div class="panel-content">
-                        <form action="bloqueios.php" method="POST" class="block-form">
-                            <input type="hidden" name="acao" value="bloquear">
-                            <div class="form-group">
-                                <label>Aluno</label>
-                                <select name="usuario_id" required>
+        <main class="app-main-content">
+        <div class="dashboard-panel full-width-panel">
+        <div class="panel-header">
+        <h2>Novo bloqueio</h2>
+        </div>
+        <div class="panel-content">
+        <form action="bloqueios.php" method="POST" class="block-form">
+        <input type="hidden" name="acao" value="bloquear">
+        <div class="form-group">
+        <label>Aluno</label>
+        <select name="usuario_id" required>
                                     <option value="">Selecione um aluno ativo</option>
                                     <?php foreach ($usuarios_ativos as $usuario): ?>
                                         <option value="<?php echo $usuario["id"]; ?>"><?php echo htmlspecialchars($usuario["nome"]); ?></option>
