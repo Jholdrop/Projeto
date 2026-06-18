@@ -13,8 +13,8 @@
 
 | Versao | Data | Descricao | Autor |
 | --- | --- | --- | --- |
-| 1.0 | 2026-06-11 | Criacao da especificacao de requisitos no modelo ISO/IEC/IEEE 29148:2018. | Equipe do projeto |
-| 1.1 | 2026-06-16 | Inclusao do passo a passo de instalacao, conexao com banco e uso inicial do sistema. | Equipe do projeto |
+| 1.0 | 2026-06-11 | Criacao da especificacao de requisitos no modelo ISO/IEC/IEEE 29148:2018. | 
+| 1.1 | 2026-06-16 | Inclusao do passo a passo de instalacao, conexao com banco e uso inicial do sistema. | 
 
 ---
 

@@ -1492,6 +1492,13 @@ button, input, select, textarea {
     gap: 1rem;
 }
 
+.plan-form {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(140px, 0.5fr) minmax(220px, 1.5fr) auto;
+    align-items: end;
+    gap: 1rem;
+}
+
 /* ==========================================================================
    RESPONSIVIDADE E ADAPTAÇÕES VISUAIS
    ========================================================================== */
@@ -1509,6 +1516,10 @@ button, input, select, textarea {
     }
 
     .block-form {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-form {
         grid-template-columns: 1fr;
     }
     

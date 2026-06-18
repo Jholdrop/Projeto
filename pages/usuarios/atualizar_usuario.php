@@ -1,13 +1,10 @@
-<?php 
+<?php
 require_once "../../config/conexao.php";
 require_once "foto_usuario_helper.php";
 session_start();
-
 if (!isset($_SESSION["funcionario_id"])) {
-    header("Location: /pages/login/login.php");
-    exit;
-}
-
+header("Location: /pages/login/login.php");
+exit; }
 $id = (int) ($_POST["id"] ?? 0);
 $nome = $_POST["nome"] ?? "";
 $cpf = preg_replace('/\D/', '', $_POST["cpf"] ?? "");
@@ -20,48 +17,16 @@ $status = $_POST["status"] ?? "ativo";
 $cidade = $_POST["cidade"] ?? "";
 $estado = $_POST["estado"] ?? "";
 $foto = salvar_foto_usuario($_FILES["foto_usuario"] ?? []);
-
 garantir_coluna_foto_usuario($conexao);
-
-$sql = "UPDATE usuarios SET 
-    nome = :nome,
-    cpf = :cpf,
-    email = :email,
-    telefone = :telefone,
-    cep = :cep,
-    numero = :numero,
-    plano_id = :plano_id,
-    status = :status,
-    cidade = :cidade,
-    estado = :estado";
-
-$params = [
-    ":nome" => $nome,
-    ":cpf" => $cpf,
-    ":email" => $email,
-    ":telefone" => $telefone,
-    ":cep" => $cep,
-    ":numero" => $numero,
-    ":plano_id" => $plano_id,
-    ":status" => $status,
-    ":cidade" => $cidade,
-    ":estado" => $estado,
-    ":id" => $id
-];
-
+$sql = "UPDATE usuarios SET nome = :nome, cpf = :cpf, email = :email, telefone = :telefone, cep = :cep, numero = :numero, plano_id = :plano_id, status = :status, cidade = :cidade, estado = :estado";
+$params = [ ":nome" => $nome, ":cpf" => $cpf, ":email" => $email, ":telefone" => $telefone, ":cep" => $cep, ":numero" => $numero, ":plano_id" => $plano_id, ":status" => $status, ":cidade" => $cidade, ":estado" => $estado, ":id" => $id ];
 if ($foto) {
-    $sql .= ", foto = :foto";
-    $params[":foto"] = $foto;
-}
-
+$sql .= ", foto = :foto";
+$params[":foto"] = $foto; }
 $sql .= " WHERE id = :id";
-
 $resultado = $conexao->prepare($sql)->execute($params);
-
 if ($resultado) {
-    header("Location: gerenciamento_usuarios.php");
-    exit;
-} else {
-    echo "Erro ao atualizar usuário.";
-}
+header("Location: gerenciamento_usuarios.php");
+exit; } else {
+echo "Erro ao atualizar usuário."; }
 ?>

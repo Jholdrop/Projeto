@@ -6,12 +6,12 @@ $user = "postgres";
 $password = "postgres";
 
 try {
-    $conexao = new PDO(
-        "pgsql:host=$host;dbname=$dbaname",
-        $user,
-        $password
-    );
+$conexao = new PDO(
+"pgsql:host=$host;dbname=$dbaname",
+$user,
+$password
+);
 } catch (PDOException $e) {
-    echo "Erro" . $e->getMessage();
+echo "Erro" . $e->getMessage();
 }
 ?>
