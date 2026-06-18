@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Editar Usuário - Bodyfit</title>
+<title>Editar Usu&aacute;rio - Bodyfit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -16,8 +16,7 @@
 <?php include "../includes/header.php"; ?>
 <main class="app-main-content">
 <form action="atualizar_usuario.php" method="POST" enctype="multipart/form-data" class="gym-form-container">
-<input type="hidden" name="id" value="<?php echo $usuario['id'];
-?>">
+<input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
 <div class="form-main-columns">
 <div class="form-left-column">
 <div class="form-section-card">
@@ -33,189 +32,81 @@
 <div class="form-grid">
 <div class="grid-col-8">
 <div class="form-group">
-<label>Nome completo
-<span class="required">*</span></label>
-<input type="text" name="nome" value="<?php echo htmlspecialchars($usuario['nome']);
-?>" placeholder="Digite o nome completo" required autocomplete="off">
+<label>Nome completo <span class="required">*</span></label>
+<input type="text" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" placeholder="Digite o nome completo" required autocomplete="off">
 </div>
 </div>
 <div class="grid-col-4">
 <div class="form-group">
-<label>Data de nascimento
-<span class="required">*</span></label>
+<label>Data de nascimento <span class="required">*</span></label>
 <div class="input-date-wrapper">
-<input type="date" name="data_nascimento" value="<?php echo date('Y-m-d');
-?>" required>
+<input type="date" name="data_nascimento" value="<?php echo date('Y-m-d'); ?>" required>
 </div>
 </div>
 </div>
 <div class="grid-col-3">
 <div class="form-group">
-<label>CPF
-<span class="required">*</span></label>
+<label>CPF <span class="required">*</span></label>
 <?php
 $raw_cpf = preg_replace('/\D/', '', $usuario['cpf']);
 $cpf_val = $usuario['cpf'];
 if (strlen($raw_cpf) == 11) {
-$cpf_val = substr($raw_cpf, 0, 3) . '.' . substr($raw_cpf, 3, 3) . '.' . substr($raw_cpf, 6, 3) . '-' . substr($raw_cpf, 9, 2); }
+$cpf_val = substr($raw_cpf, 0, 3) . '.' . substr($raw_cpf, 3, 3) . '.' . substr($raw_cpf, 6, 3) . '-' . substr($raw_cpf, 9, 2);
+}
 ?>
-<input type="text" name="cpf" value="<?php echo htmlspecialchars($cpf_val);
-?>" data-mask="cpf" maxlength="14" placeholder="000.000.000-00" required autocomplete="off">
-</div>
-</div>
-<div class="grid-col-3">
-<div class="form-group">
-<label>RG</label>
-<input type="text" name="rg" placeholder="00.000.000-0" value="00.000.000-0" autocomplete="off">
-</div>
-</div>
-<div class="grid-col-3">
-<div class="form-group">
-<label>Órgão emissor</label>
-<input type="text" name="orgao_emissor" placeholder="Ex.: SSP" value="SSP" autocomplete="off">
-</div>
-</div>
-<div class="grid-col-3">
-<div class="form-group">
-<label>Data de emissão</label>
-<div class="input-date-wrapper">
-<input type="date" name="data_emissao" value="<?php echo date('Y-m-d');
-?>">
-</div>
+<input type="text" name="cpf" value="<?php echo htmlspecialchars($cpf_val); ?>" data-mask="cpf" maxlength="14" placeholder="000.000.000-00" required autocomplete="off">
 </div>
 </div>
 <div class="grid-col-6">
 <div class="form-group">
-<label>E-mail
-<span class="required">*</span></label>
-<input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']);
-?>" placeholder="exemplo@email.com" required autocomplete="off">
+<label>E-mail <span class="required">*</span></label>
+<input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" placeholder="exemplo@email.com" required autocomplete="off">
 </div>
 </div>
 <div class="grid-col-3">
 <div class="form-group">
-<label>Telefone
-<span class="required">*</span></label>
+<label>Telefone <span class="required">*</span></label>
 <div class="input-whatsapp-group">
-<input type="text" name="telefone" value="<?php echo htmlspecialchars($usuario['telefone']);
-?>" data-mask="phone" maxlength="15" placeholder="(00) 00000-0000" required autocomplete="off">
+<input type="text" name="telefone" value="<?php echo htmlspecialchars($usuario['telefone']); ?>" data-mask="phone" maxlength="15" placeholder="(00) 00000-0000" required autocomplete="off">
 <span class="whatsapp-icon">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" class="w-4 h-4"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
 </span>
 </div>
 </div>
 </div>
-<div class="grid-col-3">
+<div class="grid-col-4">
 <div class="form-group">
-<label>Celular</label>
-<div class="input-whatsapp-group">
-<input type="text" name="celular" value="<?php echo htmlspecialchars($usuario['telefone']);
-?>" data-mask="phone" maxlength="15" placeholder="(00) 00000-0000" autocomplete="off">
-<span class="whatsapp-icon">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" class="w-4 h-4"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-</span>
-</div>
-</div>
-</div>
-<div class="grid-col-8">
-<div class="form-group">
-<label>Endereço
-<span class="required">*</span></label>
-<input type="text" name="endereco" value="<?php echo htmlspecialchars($usuario['endereco'] ?? '');
-?>" placeholder="Digite o endereço" required autocomplete="off">
+<label>N&uacute;mero <span class="required">*</span></label>
+<input type="text" name="numero" value="<?php echo htmlspecialchars($usuario['numero'] ?? ''); ?>" placeholder="123" required autocomplete="off">
 </div>
 </div>
 <div class="grid-col-4">
 <div class="form-group">
-<label>Número
-<span class="required">*</span></label>
-<input type="text" name="numero" value="<?php echo htmlspecialchars($usuario['numero'] ?? '');
-?>" placeholder="123" required autocomplete="off">
+<label>Cidade <span class="required">*</span></label>
+<input type="text" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade'] ?? ''); ?>" placeholder="Digite a cidade" required autocomplete="off">
 </div>
 </div>
 <div class="grid-col-4">
 <div class="form-group">
-<label>Complemento</label>
-<input type="text" name="complemento" placeholder="Apto, bloco, etc." value="" autocomplete="off">
-</div>
-</div>
-<div class="grid-col-4">
-<div class="form-group">
-<label>Bairro
-<span class="required">*</span></label>
-<input type="text" name="bairro" placeholder="Digite o bairro" value="Centro" required autocomplete="off">
-</div>
-</div>
-<div class="grid-col-4">
-<div class="form-group">
-<label>Cidade
-<span class="required">*</span></label>
-<input type="text" name="cidade" placeholder="Digite a cidade" value="São Paulo" required autocomplete="off">
-</div>
-</div>
-<div class="grid-col-4">
-<div class="form-group">
-<label>Estado
-<span class="required">*</span></label>
+<label>Estado <span class="required">*</span></label>
 <select name="estado" required>
-<option value="SP" selected>São Paulo</option>
-<option value="RJ">Rio de Janeiro</option>
-<option value="MG">Minas Gerais</option>
+<option value="">Selecione</option>
+<option value="SP" <?php echo ($usuario['estado'] ?? '') == 'SP' ? 'selected' : ''; ?>>S&atilde;o Paulo</option>
+<option value="RJ" <?php echo ($usuario['estado'] ?? '') == 'RJ' ? 'selected' : ''; ?>>Rio de Janeiro</option>
+<option value="MG" <?php echo ($usuario['estado'] ?? '') == 'MG' ? 'selected' : ''; ?>>Minas Gerais</option>
+<option value="PR" <?php echo ($usuario['estado'] ?? '') == 'PR' ? 'selected' : ''; ?>>Paran&aacute;</option>
+<option value="SC" <?php echo ($usuario['estado'] ?? '') == 'SC' ? 'selected' : ''; ?>>Santa Catarina</option>
+<option value="RS" <?php echo ($usuario['estado'] ?? '') == 'RS' ? 'selected' : ''; ?>>Rio Grande do Sul</option>
+<option value="BA" <?php echo ($usuario['estado'] ?? '') == 'BA' ? 'selected' : ''; ?>>Bahia</option>
+<option value="DF" <?php echo ($usuario['estado'] ?? '') == 'DF' ? 'selected' : ''; ?>>Distrito Federal</option>
 </select>
 </div>
 </div>
 <div class="grid-col-4">
 <div class="form-group">
-<label>CEP
-<span class="required">*</span></label>
-<input type="text" name="cep" value="<?php echo htmlspecialchars($usuario['cep'] ?? '');
-?>" data-mask="cep" maxlength="9" placeholder="00000-000" required autocomplete="off">
+<label>CEP <span class="required">*</span></label>
+<input type="text" name="cep" value="<?php echo htmlspecialchars($usuario['cep'] ?? ''); ?>" data-mask="cep" maxlength="9" placeholder="00000-000" required autocomplete="off">
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="form-section-card">
-<div class="section-card-header">
-<span class="section-icon text-primary">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-</svg>
-</span>
-<h3>Dados de acesso</h3>
-</div>
-<div class="section-card-body">
-<div class="form-grid">
-<div class="grid-col-4">
-<div class="form-group">
-<label>Usuário
-<span class="required">*</span></label>
-<input type="text" name="usuario_login" value="<?php echo htmlspecialchars(strtolower(explode(' ', $usuario['nome'])[0]));
-?>" placeholder="Digite o usuário" required autocomplete="off">
-</div>
-</div>
-<div class="grid-col-4 input-group">
-<div class="form-group">
-<label>Senha
-<span class="required">*</span></label>
-<div class="input-password-wrapper">
-<input type="password" name="usuario_senha" value="******" placeholder="Digite a senha" required autocomplete="off">
-<button type="button" class="toggle-password">👁</button>
-</div>
-</div>
-</div>
-<div class="grid-col-4 input-group">
-<div class="form-group">
-<label>Confirmar senha
-<span class="required">*</span></label>
-<div class="input-password-wrapper">
-<input type="password" name="usuario_confirmar_senha" value="******" placeholder="Confirme a senha" required autocomplete="off">
-<button type="button" class="toggle-password">👁</button>
-</div>
-</div>
-</div>
-<div class="grid-col-12">
-<p class="form-tip">A senha deve ter pelo menos 6 caracteres, incluindo número e letra.</p>
 </div>
 </div>
 </div>
@@ -236,16 +127,13 @@ Salvar altera&ccedil;&otilde;es
 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
 </svg>
 </span>
-<h3>Foto do usuário</h3>
+<h3>Foto do usu&aacute;rio</h3>
 </div>
 <div class="section-card-body side-photo-body">
 <div class="photo-upload-container">
 <div class="photo-preview-circle" id="photo-area">
 <?php if (!empty($usuario['foto'])): ?>
-<img src="<?php echo htmlspecialchars($usuario['foto']);
-?>" alt="Foto de
-<?php echo htmlspecialchars($usuario['nome']);
-?>" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+<img src="<?php echo htmlspecialchars($usuario['foto']); ?>" alt="Foto de <?php echo htmlspecialchars($usuario['nome']); ?>" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
 <?php else: ?>
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.2" stroke="currentColor" class="w-12 h-12 text-muted">
 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -253,8 +141,7 @@ Salvar altera&ccedil;&otilde;es
 <?php endif; ?>
 </div>
 <p class="photo-info-title">Clique para adicionar uma foto</p>
-<p class="photo-info-desc">Formatos permitidos: JPG, PNG
-<br> Tamanho máximo: 2MB</p>
+<p class="photo-info-desc">Formatos permitidos: JPG, PNG <br> Tamanho m&aacute;ximo: 2MB</p>
 <input type="file" name="foto_usuario" id="foto-input" accept="image/*" style="display: none;">
 <button type="button" class="btn-select-photo" onclick="document.getElementById('foto-input').click();">Selecionar imagem</button>
 </div>
@@ -267,46 +154,36 @@ Salvar altera&ccedil;&otilde;es
 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
 </svg>
 </span>
-<h3>Informações adicionais</h3>
+<h3>Informa&ccedil;&otilde;es adicionais</h3>
 </div>
 <div class="section-card-body">
 <div class="form-group">
-<label>Plano
-<span class="required">*</span></label>
+<label>Plano <span class="required">*</span></label>
 <select name="plano_id" required>
 <option value="">Selecione o plano</option>
 <?php foreach ($planos as $plano): ?>
-<option value="<?php echo $plano['id'];
-?>"
-<?php echo $usuario['plano_id'] == $plano['id'] ? 'selected' : '';
-?>>
+<option value="<?php echo $plano['id']; ?>" <?php echo $usuario['plano_id'] == $plano['id'] ? 'selected' : ''; ?>>
 <?php echo $plano['nome']; ?>
 </option>
 <?php endforeach; ?>
 </select>
 </div>
 <div class="form-group">
-<label>Data de início
-<span class="required">*</span></label>
+<label>Data de in&iacute;cio <span class="required">*</span></label>
 <div class="input-date-wrapper">
-<input type="date" name="data_inicio" required value="<?php echo date('Y-m-d');
-?>">
+<input type="date" name="data_inicio" required value="<?php echo date('Y-m-d'); ?>">
 </div>
 </div>
 <div class="form-group">
 <label>Status</label>
 <select name="status" class="status-select-active">
-<option value="ativo"
-<?php echo strtolower($usuario['status']) == 'ativo' ? 'selected' : '';
-?>>Ativo</option>
-<option value="inativo"
-<?php echo strtolower($usuario['status']) == 'inativo' ? 'selected' : '';
-?>>Inativo</option>
+<option value="ativo" <?php echo strtolower($usuario['status']) == 'ativo' ? 'selected' : ''; ?>>Ativo</option>
+<option value="inativo" <?php echo strtolower($usuario['status']) == 'inativo' ? 'selected' : ''; ?>>Inativo</option>
 </select>
 </div>
 <div class="form-group">
-<label>Observações</label>
-<textarea name="observacoes" placeholder="Observações opcionais sobre o usuário" maxlength="200" id="obs-textarea" oninput="document.getElementById('char-counter').textContent = this.value.length + '/200'">Excelente progresso nos treinos de força.</textarea>
+<label>Observa&ccedil;&otilde;es</label>
+<textarea name="observacoes" placeholder="Observa&ccedil;&otilde;es opcionais sobre o usu&aacute;rio" maxlength="200" id="obs-textarea" oninput="document.getElementById('char-counter').textContent = this.value.length + '/200'">Excelente progresso nos treinos de for&ccedil;a.</textarea>
 <span class="textarea-counter" id="char-counter">39/200</span>
 </div>
 </div>

@@ -87,10 +87,6 @@
 <h2>Resumo geral</h2>
 </div>
 <div class="panel-actions">
-<select class="panel-select">
-<option>Últimos 7 meses</option>
-<option>Últimos 12 meses</option>
-</select>
 </div>
 </div>
 <div class="panel-content chart-container">
